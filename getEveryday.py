@@ -18,14 +18,15 @@ def Action(inc):
     url = 'https://disease.sh/v3/covid-19/historical/'
     datecontrol = '?lastdays=all'
 
-    #countryList = ['China','India','Afghanistan','Argentina','Australia','Belgium']
-    
+    countryList = ['China','India']
+    # countryList = ['China','India','Afghanistan','Argentina','Australia','Belgium']
+    '''
     countryList = []
     countryURL = 'https://disease.sh/v3/covid-19/countries'
     response = requests.get(countryURL, headers=headers)
     for i in json.loads(response.content):
         countryList.append(i['country'])
-    
+    '''
     ResultList = {}
     CasesList = {}
     DeathsList = {}
@@ -62,7 +63,8 @@ def Action(inc):
                 dict1['name'] = countryname
                 dict1['values'] = OrResult[type1][date][countryname]
                 ResultList[type1][date].append(dict1)         
-                '''       
+    
+    '''       
     for date in OrResult:
         ResultList[date] = []
         for countryname in OrResult[date]:
@@ -87,7 +89,23 @@ def Action(inc):
 
     cursor = conn.cursor() 
 
+    for type1 in OrResult:
+        try:
+            cursor.execute('drop table Covid_%s'%(type1))
+            print('数据库已删除',type1)
+        except:
+            print('数据库不存在！',type1)
+
+    for type1 in OrResult:
+        try:
+            cursor.execute('create table Covid_%s(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))'%(type1))
+            print('数据库已创建',type1)
+        except:
+            print('数据库已存在！',type1)
+    
+    '''
     try:
+        
         cursor.execute('drop table Covid_Cases')
         cursor.execute('drop table Covid_Deaths')
         cursor.execute('drop table Covid_Recovered')
@@ -101,7 +119,20 @@ def Action(inc):
         cursor.execute('create table Covid_Recovered(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
     except:
         print('数据库已存在！')
+    '''
 
+    for type1 in OrResult:
+        print(type1)
+        for date in OrResult[type1]:
+            print(date)
+            for countryname in OrResult[type1][date]:
+                print(date,countryname)
+                try:
+                    cursor.execute('insert into Covid_%s(date,countryname,info) values (\'%s\',\'%s\',%d)'%(type1,date,countryname,OrResult['cases'][date][countryname]))
+                    conn.commit()
+                except:
+                    print('插入错误',type1)                
+    '''
     for date in OrResult['cases']:
         print(date,'cases')
         for countryname in OrResult['cases'][date]:
@@ -131,6 +162,7 @@ def Action(inc):
                 conn.commit()
             except:
                 print('插入错误3')
+    '''
     '''
     for date in ResultList['cases'].keys():
         # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
