@@ -18,14 +18,14 @@ def Action(inc):
     url = 'https://disease.sh/v3/covid-19/historical/'
     datecontrol = '?lastdays=all'
 
-    countryList = ['China','India']
-    '''
+    # countryList = ['China','India']
+    
     countryList = []
     countryURL = 'https://disease.sh/v3/covid-19/countries'
     response = requests.get(countryURL, headers=headers)
     for i in json.loads(response.content):
         countryList.append(i['country'])
-    '''
+    
     ResultList = {}
     CasesList = {}
     DeathsList = {}
@@ -35,7 +35,7 @@ def Action(inc):
     for countryname in countryList:
         URL = parse.urljoin(url,countryname)
         URL = parse.urljoin(URL,datecontrol) # 从2020年开始的日期
-        print(URL)
+        print(countryname)
         
         response = requests.get(URL, headers=headers)
 
@@ -96,12 +96,39 @@ def Action(inc):
         print('数据库不存在！')
 
     try:
-        cursor.execute('create table Covid_Cases(date varchar(255) primary key,info text)')
-        cursor.execute('create table Covid_Deaths(date varchar(255) primary key,info text)')
-        cursor.execute('create table Covid_Recovered(date varchar(255) primary key,info text)')
+        cursor.execute('create table Covid_cases(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
+        cursor.execute('create table Covid_Deaths(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
+        cursor.execute('create table Covid_Recovered(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
     except:
         print('数据库已存在！')
 
+    for date in OrResult['cases']:
+        print(date,'cases')
+        for countryname in OrResult['cases'][date]:
+            try:
+                cursor.execute('insert into Covid_Cases(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['cases'][date][countryname]))
+                conn.commit()
+            except:
+                print('插入错误')
+
+    for date in OrResult['deaths']:
+        print(date,'deaths')
+        for countryname in OrResult['deaths'][date]:
+            try:
+                cursor.execute('insert into Covid_deaths(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['deaths'][date][countryname]))
+                conn.commit()
+            except:
+                print('插入错误')
+    
+    for date in OrResult['recovered']:
+        print(date,'recovered')
+        for countryname in OrResult['recovered'][date]:
+            try:
+                cursor.execute('insert into Covid_recovered(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['recovered'][date][countryname]))
+                conn.commit()
+            except:
+                print('插入错误')
+    '''
     for date in ResultList['cases'].keys():
         # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
         print(date,"cases")
@@ -128,7 +155,8 @@ def Action(inc):
             cursor.execute('insert into Covid_Recovered(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['recovered'][date])))
             conn.commit()
         except:
-            print('插入错误')     
+            print('插入错误')   
+    '''
 
     cursor.close()
     conn.close()
@@ -143,5 +171,5 @@ def timeAct(inc=60):
     schedule.run()
 
 if __name__=="__main__":
-    timeAct(10) #18000 5小时
+    timeAct(300) #18000 5小时
         
