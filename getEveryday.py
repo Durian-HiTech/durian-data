@@ -27,6 +27,9 @@ def Action(inc):
         countryList.append(i['country'])
     '''
     ResultList = {}
+    CasesList = {}
+    DeathsList = {}
+    RecoveredList = {}
     OrResult = {}
 
     for countryname in countryList:
@@ -41,14 +44,25 @@ def Action(inc):
             continue
 
         for type1 in json.loads(response.content)["timeline"]:
+            if type1 not in OrResult:
+                OrResult[type1] = {}
             for date in json.loads(response.content)["timeline"][type1]:
-                if date not in OrResult:
-                    OrResult[date]={}
-                if countryname not in OrResult[date]:
-                    OrResult[date][countryname] = {}
-                OrResult[date][countryname][type1] = (int)(json.loads(response.content)["timeline"][type1][date])
+                if date not in OrResult[type1]:
+                    OrResult[type1][date]={}
+                if countryname not in OrResult[type1][date]:
+                    OrResult[type1][date][countryname] = {}
+                OrResult[type1][date][countryname] = (int)(json.loads(response.content)["timeline"][type1][date])
         
-    
+    for type1 in OrResult:
+        ResultList[type1] = {}
+        for date in OrResult[type1]:
+            ResultList[type1][date] = []
+            for countryname in OrResult[type1][date]:
+                dict1 = {}
+                dict1['name'] = countryname
+                dict1['values'] = OrResult[type1][date][countryname]
+                ResultList[type1][date].append(dict1)         
+                '''       
     for date in OrResult:
         ResultList[date] = []
         for countryname in OrResult[date]:
@@ -56,8 +70,9 @@ def Action(inc):
             dict1['name'] = countryname
             dict1['values'] = OrResult[date][countryname]
             ResultList[date].append(dict1)
+            '''
     
-    file = open("./Result2.json",'w')
+    file = open("./Result3.json",'w')
     print(json.dumps(ResultList),file=file)
     file.close()
 
@@ -66,33 +81,59 @@ def Action(inc):
     conn = pymysql.connect(
         host="rm-uf6ji600qianqe6921o.mysql.rds.aliyuncs.com",
         port=3306,
-        user="buaase2021",password="buaase(2021)",
+        user="",password="",
         database="durian",
         charset="utf8")
 
     cursor = conn.cursor() 
 
     try:
-        cursor.execute('create table Covid_Times(date varchar(255) primary key,info text)')
+        cursor.execute('drop table Covid_Cases')
+        cursor.execute('drop table Covid_Deaths')
+        cursor.execute('drop table Covid_Recovered')
+        print('数据库已删除')
+    except:
+        print('数据库不存在！')
+
+    try:
+        cursor.execute('create table Covid_Cases(date varchar(255) primary key,info text)')
+        cursor.execute('create table Covid_Deaths(date varchar(255) primary key,info text)')
+        cursor.execute('create table Covid_Recovered(date varchar(255) primary key,info text)')
     except:
         print('数据库已存在！')
 
-    for date in ResultList.keys():
+    for date in ResultList['cases'].keys():
         # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
-        print(date)
+        print(date,"cases")
         try:
-            cursor.execute('insert into Covid_Times(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList[date])))
+            cursor.execute('insert into Covid_Cases(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['cases'][date])))
             conn.commit()
         except:
             print('插入错误')     
 
+    for date in ResultList['deaths'].keys():
+        # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
+        print(date,"deaths")
+        try:
+            cursor.execute('insert into Covid_deaths(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['deaths'][date])))
+            conn.commit()
+        except:
+            print('插入错误')     
+
+    
+    for date in ResultList['recovered'].keys():
+        # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
+        print(date,"recovered")
+        try:
+            cursor.execute('insert into Covid_Recovered(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['recovered'][date])))
+            conn.commit()
+        except:
+            print('插入错误')     
 
     cursor.close()
     conn.close()
 
     ##### 数据库操作  
-    # print("hello: %s , %s "%("5/1/12","hello:1/3"))
-    #insert into Covid_Times(date,info) values ('5/1/21','5/1/21')
 
     print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     # schedule.enter(inc, 0, Action, (inc,))
