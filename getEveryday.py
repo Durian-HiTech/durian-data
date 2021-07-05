@@ -18,15 +18,15 @@ def Action(inc):
     url = 'https://disease.sh/v3/covid-19/historical/'
     datecontrol = '?lastdays=all'
 
-    #countryList = ['China','India']
+    countryList = ['China','India']
     #countryList = ['China','India','Afghanistan','Argentina','Australia','Belgium']
-    
+    '''
     countryList = []
     countryURL = 'https://disease.sh/v3/covid-19/countries'
     response = requests.get(countryURL, headers=headers)
     for i in json.loads(response.content):
         countryList.append(i['country'])
-    
+    '''
     ResultList = {}
     CasesList = {}
     DeathsList = {}
@@ -53,7 +53,23 @@ def Action(inc):
                 if countryname not in OrResult[type1][date]:
                     OrResult[type1][date][countryname] = {}
                 OrResult[type1][date][countryname] = (int)(json.loads(response.content)["timeline"][type1][date])
-        
+    ####vaccine 
+    URL = 'https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=all'
+    response = requests.get(URL, headers=headers)
+
+    type1 = 'vaccine'
+    OrResult[type1]={}
+    for term in json.loads(response.content):
+        countryname = term['country']
+        for date in term['timeline']:
+            if date not in OrResult[type1]:
+                OrResult[type1][date] = {}
+            if countryname not in OrResult[type1][date]:
+                OrResult[type1][date][countryname] = {}
+            OrResult[type1][date][countryname] = term['timeline'][date]
+
+    ####
+
     for type1 in OrResult:
         ResultList[type1] = {}
         for date in OrResult[type1]:
@@ -64,6 +80,7 @@ def Action(inc):
                 dict1['values'] = OrResult[type1][date][countryname]
                 ResultList[type1][date].append(dict1)         
 
+    
     file = open("./Result3.json",'w')
     print(json.dumps(ResultList),file=file)
     file.close()
