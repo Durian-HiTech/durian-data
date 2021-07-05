@@ -64,16 +64,6 @@ def Action(inc):
                 dict1['values'] = OrResult[type1][date][countryname]
                 ResultList[type1][date].append(dict1)         
     
-    '''       
-    for date in OrResult:
-        ResultList[date] = []
-        for countryname in OrResult[date]:
-            dict1 = {}
-            dict1['name'] = countryname
-            dict1['values'] = OrResult[date][countryname]
-            ResultList[date].append(dict1)
-            '''
-    
     file = open("./Result3.json",'w')
     print(json.dumps(ResultList),file=file)
     file.close()
@@ -103,23 +93,6 @@ def Action(inc):
         except:
             print('数据库已存在！',type1)
     
-    '''
-    try:
-        
-        cursor.execute('drop table Covid_Cases')
-        cursor.execute('drop table Covid_Deaths')
-        cursor.execute('drop table Covid_Recovered')
-        print('数据库已删除')
-    except:
-        print('数据库不存在！')
-
-    try:
-        cursor.execute('create table Covid_cases(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
-        cursor.execute('create table Covid_Deaths(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
-        cursor.execute('create table Covid_Recovered(date varchar(255),countryname varchar(255),info int,primary key(date,countryname))')
-    except:
-        print('数据库已存在！')
-    '''
 
     for type1 in OrResult:
         print(type1)
@@ -132,66 +105,6 @@ def Action(inc):
                     conn.commit()
                 except:
                     print('插入错误',type1)                
-    '''
-    for date in OrResult['cases']:
-        print(date,'cases')
-        for countryname in OrResult['cases'][date]:
-            print(date,countryname,'cases')
-            try:
-                cursor.execute('insert into Covid_Cases(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['cases'][date][countryname]))
-                conn.commit()
-            except:
-                print('插入错误1')
-
-    for date in OrResult['deaths']:
-        print(date,'deaths')
-        for countryname in OrResult['deaths'][date]:
-            print(date,countryname,'deaths')
-            try:
-                cursor.execute('insert into Covid_deaths(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['deaths'][date][countryname]))
-                conn.commit()
-            except:
-                print('插入错误2')
-    
-    for date in OrResult['recovered']:
-        print(date,'recovered')
-        for countryname in OrResult['recovered'][date]:
-            print(date,countryname,'recovered')
-            try:
-                cursor.execute('insert into Covid_recovered(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['recovered'][date][countryname]))
-                conn.commit()
-            except:
-                print('插入错误3')
-    '''
-    '''
-    for date in ResultList['cases'].keys():
-        # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
-        print(date,"cases")
-        try:
-            cursor.execute('insert into Covid_Cases(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['cases'][date])))
-            conn.commit()
-        except:
-            print('插入错误')     
-
-    for date in ResultList['deaths'].keys():
-        # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
-        print(date,"deaths")
-        try:
-            cursor.execute('insert into Covid_deaths(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['deaths'][date])))
-            conn.commit()
-        except:
-            print('插入错误')     
-
-    
-    for date in ResultList['recovered'].keys():
-        # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
-        print(date,"recovered")
-        try:
-            cursor.execute('insert into Covid_Recovered(date,info) values (\'%s\',\'%s\')'%(date,json.dumps(ResultList['recovered'][date])))
-            conn.commit()
-        except:
-            print('插入错误')   
-    '''
 
     cursor.close()
     conn.close()
