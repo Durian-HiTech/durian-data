@@ -18,7 +18,7 @@ def Action(inc):
     url = 'https://disease.sh/v3/covid-19/historical/'
     datecontrol = '?lastdays=all'
 
-    # countryList = ['China','India']
+    #countryList = ['China','India','Afghanistan','Argentina','Australia','Belgium']
     
     countryList = []
     countryURL = 'https://disease.sh/v3/covid-19/countries'
@@ -105,29 +105,32 @@ def Action(inc):
     for date in OrResult['cases']:
         print(date,'cases')
         for countryname in OrResult['cases'][date]:
+            print(date,countryname,'cases')
             try:
                 cursor.execute('insert into Covid_Cases(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['cases'][date][countryname]))
                 conn.commit()
             except:
-                print('插入错误')
+                print('插入错误1')
 
     for date in OrResult['deaths']:
         print(date,'deaths')
         for countryname in OrResult['deaths'][date]:
+            print(date,countryname,'deaths')
             try:
                 cursor.execute('insert into Covid_deaths(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['deaths'][date][countryname]))
                 conn.commit()
             except:
-                print('插入错误')
+                print('插入错误2')
     
     for date in OrResult['recovered']:
         print(date,'recovered')
         for countryname in OrResult['recovered'][date]:
+            print(date,countryname,'recovered')
             try:
                 cursor.execute('insert into Covid_recovered(date,countryname,info) values (\'%s\',\'%s\',%d)'%(date,countryname,OrResult['recovered'][date][countryname]))
                 conn.commit()
             except:
-                print('插入错误')
+                print('插入错误3')
     '''
     for date in ResultList['cases'].keys():
         # print(json.dumps(ResultList[date]),type(json.dumps(ResultList[date])))
