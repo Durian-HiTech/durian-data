@@ -18,15 +18,15 @@ def Action(inc):
     url = 'https://disease.sh/v3/covid-19/historical/'
     datecontrol = '?lastdays=all'
 
-    countryList = ['China','India']
+    #countryList = ['China','India']
     #countryList = ['China','India','Afghanistan','Argentina','Australia','Belgium']
-    '''
+    
     countryList = []
     countryURL = 'https://disease.sh/v3/covid-19/countries'
     response = requests.get(countryURL, headers=headers)
     for i in json.loads(response.content):
         countryList.append(i['country'])
-    '''
+    
     ResultList = {}
     CasesList = {}
     DeathsList = {}
