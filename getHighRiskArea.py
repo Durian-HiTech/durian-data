@@ -1,27 +1,51 @@
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
 import requests
 import json
-import os
-from urllib import parse
-from datetime import datetime
-import time
-import sched
-import pymysql
+from bs4 import BeautifulSoup
 
-schedule = sched.scheduler(time.time, time.sleep)
+result = {'中风险地区': [], '高风险地区': []}
 
-def Action(inc):
-    url ='http://www.gd.gov.cn/gdywdt/zwzt/yqfk/content/post_3021711.html'
-    data = urlopen(url)
-    soup = BeautifulSoup(data, 'html.parser')
-    result = soup.find_all("div", class_='zw')
-    print(result)
-    schedule.enter(inc, 0, Action, (inc,))
 
-def timeAct(inc=60):
-    schedule.enter(0,0,Action,(inc,))
-    schedule.run()
+def get_html(url):
+    try:
+        r = requests.get(url, timeout=30)
+        r.raise_for_status()
+        r.encoding = r.apparent_encoding
+        return r.text
+    except:
+        return ""
 
-if __name__=="__main__":
-    timeAct(30) #18000 5小时
+
+def get_content(url):
+    html = get_html(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    paras_tmp = soup.select('.zw-title') + soup.select('p')
+    paras = paras_tmp[0:]
+    return paras
+
+
+def generate_result(text):
+    now = ''
+    for t in text[:-2]:
+        line = t.get_text().strip()
+        if len(t) > 0:
+            print(line)
+            if line == '高风险地区：':
+                now = '高风险地区'
+            elif line == '中风险地区：':
+                now = '中风险地区'
+            elif now != '' and len(line.split()) != 0:
+                result[now].append(line)
+
+
+def risk_area_spider():
+    url = 'http://www.gd.gov.cn/gdywdt/zwzt/yqfk/content/mpost_3021711.html'
+    text = get_content(url)
+    generate_result(text)
+
+    with open('./risk_areas.json', 'w+', encoding='utf-8') as f:
+        f.write(json.dumps(result, ensure_ascii=False))
+
+def main():
+    risk_area_spider()
+
+main()
