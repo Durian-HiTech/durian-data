@@ -1,6 +1,5 @@
 import requests
 import json
-import os
 from bs4 import BeautifulSoup
 
 result = {'中风险地区': [], '高风险地区': []}
