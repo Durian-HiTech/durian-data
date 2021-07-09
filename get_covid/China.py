@@ -10,7 +10,17 @@ import pymysql
 ###本程序是从all_minified中获取省数据的办法
 
 ### 读入信息
-data = json.load(open("all_minified.json","r",encoding = "utf-8"))
+headers = {
+    'content-type': 'application/json',
+}
+
+url = 'https://covid19.health/data/all_minified.json'
+
+response = requests.get(url, headers=headers)
+
+data = json.loads(response.content.decode())
+
+# data = json.load(open("all_minified.json","r",encoding = "utf-8"))
 typeType = ["cases","deaths","recovered"]
 typeType2 = ["confirmedCount", "deadCount", "curedCount"]
 ###
@@ -75,17 +85,20 @@ for date in data["全球"]["confirmedCount"]:
             cursor.execute('insert into Covid_China_cases(date,province_name,info) values (\'%s\',\'%s\',%d)'%(date,data[countryname][countrysmall][countrylittle]["ENGLISH"],InfoCases[eng]))
             conn.commit()
         except:
-            print("Cases插入失败")
+            a = 1
+            #print("Cases插入失败")
         try:
             cursor.execute('insert into Covid_China_deaths(date,province_name,info) values (\'%s\',\'%s\',%d)'%(date,data[countryname][countrysmall][countrylittle]["ENGLISH"],InfoDeaths[eng]))
             conn.commit()
         except:
-            print("Deaths插入失败")
+            a = 1
+            #print("Deaths插入失败")
         try:
             cursor.execute('insert into Covid_China_recovered(date,province_name,info) values (\'%s\',\'%s\',%d)'%(date,data[countryname][countrysmall][countrylittle]["ENGLISH"],InfoRecovered[eng]))
             conn.commit()
         except:
-            print("Recovered插入失败")        
+            a = 1
+            #print("Recovered插入失败")        
     print(date,countryname,"  ",nameCountry)
 
 ###
@@ -121,17 +134,20 @@ for countrysmall in data[countryname]: #香港，台湾，澳门
             cursor.execute('insert into Covid_China_cases(date,province_name,info) values (\'%s\',\'%s\',%d)'%(date,eng,InfoCases[eng]))
             conn.commit()
         except:
-            print("Cases插入失败")
+            a = 1
+            # print("Cases插入失败")
         try:
             cursor.execute('insert into Covid_China_deaths(date,province_name,info) values (\'%s\',\'%s\',%d)'%(date,eng,InfoDeaths[eng]))
             conn.commit()
         except:
-            print("Deaths插入失败")
+            a = 1
+            # print("Deaths插入失败")
         try:
             cursor.execute('insert into Covid_China_recovered(date,province_name,info) values (\'%s\',\'%s\',%d)'%(date,eng,InfoRecovered[eng]))
             conn.commit()
         except:
-            print("Recovered插入失败")
+            a = 1
+            # print("Recovered插入失败")
         print(date,countrysmall,"  ",InfoCases[eng],InfoDeaths[eng],InfoRecovered[eng])
 ###
 
