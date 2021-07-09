@@ -1,5 +1,8 @@
 import requests
 import json
+import time
+
+jdata = []
 
 city={"AAT":"阿勒泰","ACX":"兴义","AEB":"百色","AKU":"阿克苏","AOG":"鞍山","AQG":"安庆","AVA":"安顺","AXF":"阿拉善左旗","BAV":"包头","BFJ":"毕节","BHY":"北海"
 		,"BJS":"北京","BPE":"秦皇岛","BPL":"博乐","BPX":"昌都","BSD":"保山","CAN":"广州","CDE":"承德","CGD":"常德","CGO":"郑州","CGQ":"长春","CHG":"朝阳","CIF":"赤峰"
@@ -20,14 +23,13 @@ city={"AAT":"阿勒泰","ACX":"兴义","AEB":"百色","AKU":"阿克苏","AOG":"�
 		,"XIL":"锡林浩特","XMN":"厦门","XNN":"西宁","XUZ":"徐州","YBP":"宜宾","YCU":"运城","YIC":"宜春","YIE":"阿尔山","YIH":"宜昌","YIN":"伊宁","YIW":"义乌","YNJ":"延吉"
 		,"YNT":"烟台","YNZ":"盐城","YTY":"扬州","YUS":"玉树","YZY":"张掖","ZAT":"昭通","ZHA":"湛江","ZHY":"中卫","ZQZ":"张家口","ZUH":"珠海","ZYI":"遵义(新舟)","KJI":"布尔津"}
 
-
-if __name__ == "__main__":
+def getinfo(d,a,date):
 
     url = "https://flights.ctrip.com/itinerary/api/12808/products"
     # Referer = "https://flights.ctrip.com/itinerary/oneway/bjs-sha?date=2019-07-18"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0",
-        "Referer": "https://flights.ctrip.com/itinerary/oneway/bjs-sha?date=2021-07-09",
+        "Referer": "https://flights.ctrip.com/itinerary/oneway/bjs-sha?date=" + date,
         "Content-Type": "application/json"
     }
     request_payload = {
@@ -37,8 +39,7 @@ if __name__ == "__main__":
         "hasBaby": False,
         "searchIndex": 1,
         "airportParams": [
-            {"dcity": "BJS", "acity": "SHA", "date": "2019-07-18"}
-            # {"dcity": "BJS", "acity": "SHA", "dcityname": "北京", "acityname": "上海", "date": "2019-07-18", "dcityid": 1, "acityid": 2}
+            {"dcity": d, "acity": a, "date": date}
         ]
     }
 
@@ -63,7 +64,14 @@ if __name__ == "__main__":
             departureAirportName = flight.get('departureAirportInfo').get('airportName')
             arrivalCityName = flight.get('arrivalAirportInfo').get('cityName')
             arrivalAirportName = flight.get('arrivalAirportInfo').get('airportName')
-
+            jdata.append({airlineName,
+                  flightNumber,
+                  departureDate,
+                  arrivalDate,
+                  departureCityName,
+                  departureAirportName,
+                  arrivalCityName,
+                  arrivalAirportName})
             print(airlineName, "\t",
                   flightNumber, "\t",
                   departureDate, "\t",
@@ -72,3 +80,25 @@ if __name__ == "__main__":
                   departureAirportName, "\t",
                   arrivalCityName, "\t",
                   arrivalAirportName)
+
+
+if __name__ == "__main__":
+
+    NOW = time.strftime("%Y-%m-%d", time.localtime())
+    # getinfo("AAT", "ACX", NOW)
+    # for x in city:
+    #     for y in city:
+    #         if x!=y:
+    #             print(x+" "+y)
+    #             getinfo(x,y,"2021-07-09")
+    for x in city:
+        for y in city:
+            if x != y:
+                try:
+                    getinfo(x,y,NOW)
+                # getinfo(x,y,"2021-07-09")
+                except:
+                    pass
+
+    with open('./flights_data/'+NOW+"_flightinfo.json", 'w') as file_object:
+        json.dump(jdata, file_object)
