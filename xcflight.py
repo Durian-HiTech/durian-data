@@ -1,6 +1,8 @@
 import requests
 import json
 import time
+import pymysql
+
 
 jdata = []
 
@@ -23,7 +25,10 @@ city={"AAT":"阿勒泰","ACX":"兴义","AEB":"百色","AKU":"阿克苏","AOG":"�
 		,"XIL":"锡林浩特","XMN":"厦门","XNN":"西宁","XUZ":"徐州","YBP":"宜宾","YCU":"运城","YIC":"宜春","YIE":"阿尔山","YIH":"宜昌","YIN":"伊宁","YIW":"义乌","YNJ":"延吉"
 		,"YNT":"烟台","YNZ":"盐城","YTY":"扬州","YUS":"玉树","YZY":"张掖","ZAT":"昭通","ZHA":"湛江","ZHY":"中卫","ZQZ":"张家口","ZUH":"珠海","ZYI":"遵义(新舟)","KJI":"布尔津"}
 
-def getinfo(d,a,date):
+def getinfo(d,a,date,cursorx,db):
+
+
+
 
     url = "https://flights.ctrip.com/itinerary/api/12808/products"
     # Referer = "https://flights.ctrip.com/itinerary/oneway/bjs-sha?date=2019-07-18"
@@ -64,14 +69,24 @@ def getinfo(d,a,date):
             departureAirportName = flight.get('departureAirportInfo').get('airportName')
             arrivalCityName = flight.get('arrivalAirportInfo').get('cityName')
             arrivalAirportName = flight.get('arrivalAirportInfo').get('airportName')
-            jdata.append({airlineName,
+
+
+            cursorx.execute(
+                """insert into flight_domestic(airline_name, flight_number,departure_date,arrival_date,departure_city_name,departure_airport_name,arrival_city_name,arrival_airport_name)
+                value (%s,%s,%s,%s,%s,%s,%s,%s)""",  # 纯属python操作mysql知识，不熟悉请恶补
+                (airlineName,
                   flightNumber,
                   departureDate,
                   arrivalDate,
                   departureCityName,
                   departureAirportName,
                   arrivalCityName,
-                  arrivalAirportName})
+                  arrivalAirportName,))
+
+            db.commit()
+
+
+
             print(airlineName, "\t",
                   flightNumber, "\t",
                   departureDate, "\t",
@@ -84,6 +99,9 @@ def getinfo(d,a,date):
 
 if __name__ == "__main__":
 
+    db = pymysql.connect(host = "rm-uf6ji600qianqe6921o.mysql.rds.aliyuncs.com",port=3306,user = "buaase2021",passwd = "buaase(2021)",db = "durian")
+    cursor = db.cursor()
+    print("link success")
     NOW = time.strftime("%Y-%m-%d", time.localtime())
     # getinfo("AAT", "ACX", NOW)
     # for x in city:
@@ -91,14 +109,17 @@ if __name__ == "__main__":
     #         if x!=y:
     #             print(x+" "+y)
     #             getinfo(x,y,"2021-07-09")
+    # getinfo("AAT", "KRY", NOW, cursor,db)
+
     for x in city:
         for y in city:
             if x != y:
+                print(x,y)
                 try:
-                    getinfo(x,y,NOW)
+                    getinfo(x,y,NOW,cursor,db)
                 # getinfo(x,y,"2021-07-09")
                 except:
                     pass
-
-    with open('./flights_data/'+NOW+"_flightinfo.json", 'w') as file_object:
-        json.dump(jdata, file_object)
+    #
+    # with open('./flights_data/'+NOW+"_flightinfo.json", 'w') as file_object:
+    #     json.dump(jdata, file_object)
