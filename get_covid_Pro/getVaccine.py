@@ -26,6 +26,8 @@ def Action(inc):
 
     CountryList = []
 
+    AtLastCountryList = []
+
     data = json.load(open("all_minified.json","r",encoding = "utf-8"))
     for itemT in data:
         if itemT in [ 'confirmedCount', 'curedCount', 'deadCount']:
@@ -52,6 +54,8 @@ def Action(inc):
         if countryname not in CountryList:
             continue
         
+        AtLastCountryList.append(countryname)
+        
         for date in term['timeline']:
             if date not in OrResult[type1]:
                 OrResult[type1][date] = {}
@@ -73,12 +77,13 @@ def Action(inc):
 
     cursor = conn.cursor() 
 
-    for type1 in OrResult:
-        try:
-            cursor.execute('drop table Covid_%s'%(type1))
-            print('数据库已删除',type1)
-        except:
-            print('数据库不存在！',type1)
+    # for type1 in OrResult:
+    #     try:
+    #         cursor.execute('drop table Covid_%s'%(type1))
+    #         print('数据库已删除',type1)
+    #     except:
+    #         print('数据库不存在！',type1)
+    
 
     for type1 in OrResult:
         try:
@@ -102,7 +107,16 @@ def Action(inc):
                     conn.commit()
                 except:
                     print('插入错误',type1,countryname,date)      
-                        
+                    
+
+    for date in data["全球"]["confirmedCount"]:
+        for countryname in AtLastCountryList:
+            print(date,countryname)
+            try:
+                cursor.execute('insert into Covid_vaccine(date,country_name,info) values (\'%s\',\'%s\',%d)'%(date,countryname,0))
+                conn.commit()
+            except:
+                print('插入错误',"vaccine0",countryname,date)                
 
     cursor.close()
     conn.close()
