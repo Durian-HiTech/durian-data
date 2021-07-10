@@ -33,6 +33,7 @@ for itemT in Temp:
         print(Temp[itemT]["ENGLISH"])
         if Temp[itemT]["ENGLISH"] in CountryList:
             data[itemT] = Temp[itemT]
+
 ###
 
 ### 数据库操作
@@ -47,14 +48,8 @@ cursor = conn.cursor()
 
 ####创建数据库
 for type1 in typeType:
-    '''
     try:
-        cursor.execute('drop table Covid_Province_%s'%type1)
-    except:
-        print("删除失败")
-    '''
-    try:
-        cursor.execute('create table Covid_Province_%s(date datetime,country_name varchar(1000),info text,primary key(date,country_name))'%type1)
+        cursor.execute('create table Covid_Province_%s(date datetime,country_name varchar(1000),info MEDIUMTEXT,primary key(date,country_name))'%type1)
     except:
         print("创建失败")
 
@@ -68,6 +63,28 @@ for countryname in data: # 英国
         InfoDeaths = {}
         InfoRecovered = {}
         nameCountry = []
+        ####
+        if countryname in ['意大利','阿尔及利亚','智利','全球']:
+            emptysetS={}
+            try:
+                cursor.execute('insert into Covid_Province_cases(date,country_name,info) values (\'%s\',\'%s\',\'%s\')'%(date,data[countryname]["ENGLISH"],emptysetS))
+                conn.commit()
+            except:
+                print("Cases插入失败")
+            try:
+                cursor.execute('insert into Covid_Province_deaths(date,country_name,info) values (\'%s\',\'%s\',\'%s\')'%(date,data[countryname]["ENGLISH"],emptysetS))
+                conn.commit()
+            except:
+                print("Deaths插入失败")
+            try:
+                cursor.execute('insert into Covid_Province_recovered(date,country_name,info) values (\'%s\',\'%s\',\'%s\')'%(date,data[countryname]["ENGLISH"],emptysetS))
+                conn.commit()
+            except:
+                print("Recovered插入失败")  
+            continue
+        print(date,countryname,"  ",nameCountry) 
+        # continue
+        #####
         for countrylittle in data[countryname]: # 英格兰
             if countrylittle in ["confirmedCount", "deadCount", "curedCount","ENGLISH"]:
                 continue 
@@ -86,7 +103,7 @@ for countryname in data: # 英国
                 InfoRecovered[eng] = data[countryname][countrylittle]["curedCount"][date]
             else:
                 InfoRecovered[eng] = 0
-        print(date,countryname,"  ",nameCountry)
+        # print(date,countryname,"  ",nameCountry)
         try:
             cursor.execute('insert into Covid_Province_cases(date,country_name,info) values (\'%s\',\'%s\',\'%s\')'%(date,data[countryname]["ENGLISH"],json.dumps(InfoCases)))
             conn.commit()
@@ -102,7 +119,7 @@ for countryname in data: # 英国
             conn.commit()
         except:
             print("Recovered插入失败")
-
+'''
 ### 中国大陆特例
 countryname = "中国"
 countrysmall = "中国大陆"
@@ -193,7 +210,7 @@ for countrysmall in data[countryname]:
         except:
             print("Recovered插入失败")
 ###
-
+'''
 
 cursor.close()
 conn.close()   
