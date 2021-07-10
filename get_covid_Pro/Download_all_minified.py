@@ -1,11 +1,14 @@
 import requests
 import json
 import os
+import wget
 
 ### 认证 下载all_minified.json
 
+
 headers = {
     'content-type': 'application/json',
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36',
 }
 
 url = 'https://covid19.health/data/all_minified.json'
@@ -33,3 +36,10 @@ print(CountryList)
 file = open("./all_minified.json",'w')
 print(a,file=file)
 file.close()
+
+'''
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'}
+url = 'https://covid19.health/data/all_minified.json'
+file_name = wget.download(url, headers=headers)
+print(file_name)
+'''
