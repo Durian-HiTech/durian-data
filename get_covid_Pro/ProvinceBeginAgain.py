@@ -13,6 +13,7 @@ import pymysql
 ### 读入信息
 headers = {
     'content-type': 'application/json',
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36',
 }
 data = {}
 Temp = json.load(open("all_minified.json","r",encoding = "utf-8"))
@@ -54,9 +55,11 @@ for type1 in typeType:
         print("创建失败")
 
 for countryname in data: # 英国
+    '''
     if countryname in ["中国"]:
         continue
-    if countryname in ["confirmedCount", "deadCount", "curedCount","ENGLISH","全球"]:
+    '''
+    if countryname in ["confirmedCount", "deadCount", "curedCount","ENGLISH"]:
         continue
     for date in data["全球"]["confirmedCount"]:
         InfoCases = {}
@@ -83,7 +86,6 @@ for countryname in data: # 英国
                 print("Recovered插入失败")  
             continue
         print(date,countryname,"  ",nameCountry) 
-        # continue
         #####
         for countrylittle in data[countryname]: # 英格兰
             if countrylittle in ["confirmedCount", "deadCount", "curedCount","ENGLISH"]:
