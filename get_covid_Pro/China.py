@@ -13,6 +13,7 @@ import pymysql
 ### 读入信息
 headers = {
     'content-type': 'application/json',
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36',
 }
 
 url = 'https://covid19.health/data/all_minified.json'
