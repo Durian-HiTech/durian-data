@@ -24,7 +24,7 @@ mingming = [('G', 9999),
             ('Y', 999)]
 
 
-def getinfo(logger, train_number='G99', date=DEFAULT_DATE_STR):
+def getinfo(logger,train_number='G99', date=DEFAULT_DATE_STR,):
     # logger.info('getinfo')
     params = {
         'method_name': 'buy',
@@ -44,6 +44,7 @@ def getinfo(logger, train_number='G99', date=DEFAULT_DATE_STR):
         logger.error(params)
         return None
     result = json.loads(response.text)
+
     if result == {'count': 0}:
         logger.error('无法获取该火车班次，班次为' + train_number)
         return None

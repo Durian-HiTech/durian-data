@@ -112,14 +112,23 @@ if __name__ == "__main__":
     # getinfo("AAT", "KRY", NOW, cursor,db)
 
     for x in city:
-        for y in city:
-            if x != y:
-                print(x,y)
-                try:
-                    getinfo(x,y,NOW,cursor,db)
-                # getinfo(x,y,"2021-07-09")
-                except:
-                    pass
+        print(x)
+        try:
+            getinfo("LUM",x,"2021-07-11",cursor,db)
+            getinfo(x,"LUM","2021-07-11",cursor,db)
+        # getinfo(x,y,"2021-07-09")
+        except:
+            pass
+
+        # for y in city:
+        #     if x != y:
+        #         print(x,y)
+
+                # try:
+                #     getinfo("LUM",x,NOW,cursor,db)
+                # # getinfo(x,y,"2021-07-09")
+                # except:
+                #     pass
     #
     # with open('./flights_data/'+NOW+"_flightinfo.json", 'w') as file_object:
     #     json.dump(jdata, file_object)
