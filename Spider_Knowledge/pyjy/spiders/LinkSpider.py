@@ -1,6 +1,7 @@
 from scrapy.spiders import CrawlSpider,Rule
 from scrapy.linkextractors import LinkExtractor
 import json
+from pyjy.items import PyjyItem
 class LinkSpider(CrawlSpider):
     name = 'LinkSpider'
     allowed_domains = ['www.gov.cn']
@@ -32,19 +33,24 @@ class LinkSpider(CrawlSpider):
 
     def parse_item(self, response):
 
-        # link = LinkExtractor(allow=('^http://www.gov.cn/fuwu/.'))
-        # links = link.extract_links(response)
+        link = LinkExtractor(allow=('^http://www.gov.cn/fuwu/20.'))
+        links = link.extract_links(response)
         
-        # for x in links:
-        #     print(x)
+        for x in links:
+            print(x.url)
+            print(x.text)
+            item = PyjyItem()
+            item["title"]=x.title
+            item["content"]=x.url
+            yield item
 
         print(response.url)
-        with open("record.json", "a") as f:
+        # with open("record.json", "a") as f:
 
-            # json.dump(response.url, f)
+        #     # json.dump(response.url, f)
 
-            line = json.dumps(response.url) + "\n"
-            # 写入文件
-            f.write(line)
+        #     line = json.dumps(response.url) + "\n"
+        #     # 写入文件
+        #     f.write(line)
 
         # print("加载入文件完成...")
