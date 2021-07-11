@@ -11,13 +11,13 @@ conn = pymysql.connect( host='rm-uf6ji600qianqe6921o.mysql.rds.aliyuncs.com',
 
 cursor = conn.cursor()
 
-with open('./utils/CityList.json','r',encoding='utf8') as f:
+with open('./utils/Center.json','r',encoding='utf8') as f:
     city_dict = json.load(f)
-# print(city_dict)
-# print(city_dict['data'])
+    # print(city_dict)
 
-for city in city_dict['data']:
-    # print(city['province'], city['city'])
-    cursor.execute('INSERT INTO main_city VALUES (%s, %s)', (city['province'],city['city']))
+for city in city_dict:
+    print(city['name'], city['center'])
+    # print(str(city['center']))
+    cursor.execute('INSERT INTO center_city VALUES (%s, %s, %s)', (city['name'],city['center'][0], city['center'][1]))
 
 conn.commit()
