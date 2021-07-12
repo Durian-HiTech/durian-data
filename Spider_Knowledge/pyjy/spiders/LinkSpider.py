@@ -40,8 +40,8 @@ class LinkSpider(CrawlSpider):
             print(x.url)
             print(x.text)
             item = PyjyItem()
-            item["title"]=x.title
-            item["content"]=x.url
+            item["title"]=x.text
+            item["link"] = x.url
             yield item
 
         print(response.url)

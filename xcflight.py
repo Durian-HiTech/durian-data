@@ -31,7 +31,10 @@ city = {"BJS": "北京","SHA": "上海", "CAN": "广州","SZX": "深圳",
                      "CTU": "成都","HGH": "杭州", "WUH": "武汉","SIA": "西安","CKG": "重庆",
                      "TAO": "青岛","CSX": "长沙","NKG": "南京","XMN": "厦门","KMG": "昆明",
                      "DLC": "大连","TSN": "天津","CGO": "郑州","SYX": "三亚","TNA": "济南",
-                     "FOC": "福州"
+                     "FOC": "福州", "SHE": "沈阳", "CGQ": "长春", "HRB": "哈尔滨",
+                     "SJW": "石家庄","KWE":"贵阳","LUM":"芒市",
+                     "TVS": "唐山", "TYN": "太原", "BAV": "包头", "DLC": "大连", "AOG": "鞍山", "URC": "乌鲁木齐","KHN":"南昌",
+                     
                      }
 
 def getinfo(d,a,date,cursorx,db):
@@ -125,21 +128,22 @@ if __name__ == "__main__":
     #
     #     NOW = NOW + datetime.timedelta(days=1)
     for x in city:
+        for y in city:
         # time.sleep(10)
-        print(x)
-        print(NOW.strftime("%Y-%m-%d"))
-        try:
-            getinfo("LUM",x,NOW.strftime("%Y-%m-%d"),cursor,db)
-            time.sleep(10)
-        except:
-            pass
+            print(x,y)
+            print(NOW.strftime("%Y-%m-%d"))
+            try:
+                getinfo(y,x,"2021-07-14",cursor,db)
+                time.sleep(10)
+            except:
+                time.sleep(10)
 
-        try:
-            getinfo(x,"LUM",NOW.strftime("%Y-%m-%d"),cursor,db)
-            time.sleep(10)
-        except:
-            pass
-        # getinfo(x,y,"2021-07-09")
+            # try:
+            #     getinfo(x,"LUM",NOW.strftime("%Y-%m-%d"),cursor,db)
+            #     time.sleep(10)
+            # except:
+            #     pass
+            # getinfo(x,y,"2021-07-09")
 
 
         # for y in city:

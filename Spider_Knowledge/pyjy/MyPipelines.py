@@ -2,6 +2,7 @@
 from scrapy.exceptions import DropItem
 import json
 import pymysql
+import datetime
 
 class MyPipeline(object):
     def __init__(self):
@@ -13,10 +14,10 @@ class MyPipeline(object):
     #该方法用于处理数据
     def process_item(self, item, spider):
         self.cursor.execute(
-            """insert into knowledge(knowledge_title, knowledge_link)
-            value (%s, %s)""",  # 纯属python操作mysql知识，不熟悉请恶补
+            """insert into knowledge(knowledge_title, knowledge_link,knowledge_date)
+            value (%s, %s,%s)""",  # 纯属python操作mysql知识，不熟悉请恶补
             (item['title'],  # item里面定义的字段和表字段对应
-             item['link'],))
+             item['link'],datetime.datetime.now().strftime("%Y-%m-%d")))
         # 提交sql语句
         self.connect.commit()
         return item  # 必须实现返回
