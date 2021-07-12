@@ -1,27 +1,8 @@
-import base64
-import re
-from datetime import datetime
-from io import BytesIO
 
+from datetime import datetime
 import pymysql
 import requests
 from bs4 import BeautifulSoup
-
-
-def get_num_by_image(url):
-    host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=xVaNvyZ45BYWOSUAGqbYHkio&client_secret=MKZmvOt0t3Xr82u80WYpaGh2V2bKFmza'
-    response = requests.get(host)
-    access_token = response.json()['access_token']
-    request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/numbers"
-    response = requests.get(url)
-    img = base64.b64encode(BytesIO(response.content).read())
-    params = {"image": img}
-    request_url = request_url + "?access_token=" + access_token
-    headers = {'content-type': 'application/x-www-form-urlencoded'}
-    response = requests.post(request_url, data=params, headers=headers)
-    res_time = response.json()['words_result'][0]['words']
-    res_time = res_time[:2] + ':' + res_time[2:]
-    return res_time
 
 def get_flight_info_by_code(code, date=datetime.now().strftime('%Y-%m-%d')):
     url = f'http://www.umetrip.com/mskyweb/fs/fc.do?flightNo={code}&date={date}&channel='
@@ -30,20 +11,11 @@ def get_flight_info_by_code(code, date=datetime.now().strftime('%Y-%m-%d')):
         if fail_num > 50:
             return '暂无'
         res = requests.get(url)
-        soup =
+        soup = BeautifulSoup(res.text, 'html.parser')
         state = soup.find(attrs={'class': 'state'})
         if state is not None:
-            # city_num = len(state.find_all('div'))
-            # print(city_num)
             condition = state.text.strip()[:2]
-            # city = soup.find_all('h2')
-            # dept_airport = re.split('[()]', city[0].text)[1].strip()
-            # arri_airport = re.split('[()]', city[-1].text)[1].strip()
-            t = soup.find_all(attrs={'class': 'time'})
-            # dept_time = get_num_by_image(t[city_num].find('img').get('src'))
-            # arri_time = get_num_by_image(t[-1].find('img').get('src'))
             return condition
-            # return code, condition, dept_airport, arri_airport, date + ' ' + dept_time + ':00', date + ' ' + arri_time + ':00'
         fail_num += 1
 
 if __name__ == '__main__':
