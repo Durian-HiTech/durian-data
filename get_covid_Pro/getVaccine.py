@@ -2,7 +2,6 @@ import requests
 import json
 import os
 from urllib import parse
-# from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 import time
 import sched
@@ -23,6 +22,8 @@ def Action(inc):
     DeathsList = {}
     RecoveredList = {}
     OrResult = {}
+    totalPerHundred = {}
+    dailyPerMillion = {}
 
     CountryList = []
 
@@ -35,11 +36,13 @@ def Action(inc):
         CountryList.append(data[itemT]["ENGLISH"])
 
     ####vaccine 
-    URL = 'https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=all'
+    URL = 'https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=all&fullData=true'
     response = requests.get(URL, headers=headers)
 
     type1 = 'vaccine'
     OrResult[type1]={}
+    totalPerHundred[type1] = {}
+    dailyPerMillion[type1] = {}
     for term in json.loads(response.content):
         countryname = term['country']
         if countryname == "UK":
@@ -56,12 +59,29 @@ def Action(inc):
         
         AtLastCountryList.append(countryname)
         
-        for date in term['timeline']:
+        for DArea in term['timeline']:
+            date = DArea["date"]
+        # for date in term['timeline']:
             if date not in OrResult[type1]:
                 OrResult[type1][date] = {}
             if countryname not in OrResult[type1][date]:
                 OrResult[type1][date][countryname] = {}
-            OrResult[type1][date][countryname] = term['timeline'][date]
+            # OrResult[type1][date][countryname] = term['timeline'][date]
+            OrResult[type1][date][countryname] = DArea["total"]
+
+            if date not in totalPerHundred[type1]:
+                totalPerHundred[type1][date] = {}
+            if countryname not in totalPerHundred[type1][date]:
+                totalPerHundred[type1][date][countryname] = {}
+            # totalPerHundred[type1][date][countryname] = term['timeline'][date]
+            totalPerHundred[type1][date][countryname] = DArea["totalPerHundred"]
+
+            if date not in dailyPerMillion[type1]:
+                dailyPerMillion[type1][date] = {}
+            if countryname not in dailyPerMillion[type1][date]:
+                dailyPerMillion[type1][date][countryname] = {}
+            # dailyPerMillion[type1][date][countryname] = term['timeline'][date]
+            dailyPerMillion[type1][date][countryname] = DArea["dailyPerMillion"]
 
     ####    
     
@@ -77,17 +97,17 @@ def Action(inc):
 
     cursor = conn.cursor() 
 
-    # for type1 in OrResult:
-    #     try:
-    #         cursor.execute('drop table Covid_%s'%(type1))
-    #         print('数据库已删除',type1)
-    #     except:
-    #         print('数据库不存在！',type1)
+    for type1 in OrResult:
+        try:
+            cursor.execute('drop table Covid_%s'%(type1))
+            print('数据库已删除',type1)
+        except:
+            print('数据库不存在！',type1)
     
 
     for type1 in OrResult:
         try:
-            cursor.execute('create table Covid_%s(date datetime,country_name varchar(1000),info int,primary key(date,country_name))'%(type1))
+            cursor.execute('create table Covid_%s(date datetime,country_name varchar(1000),info int,totalPerHundred int,dailyPerMillion int,primary key(date,country_name))'%(type1))
             print('数据库创建',type1)
         except:
             print('数据库已存在！',type1)
@@ -103,7 +123,7 @@ def Action(inc):
                 # print(date,countryname,type1)
                 # print("\'20%s-%s-%s\'  \'%s\',%s"%(day[2],day[0],day[1],countryname,type1))
                 try:
-                    cursor.execute('insert into Covid_%s(date,country_name,info) values (\'20%s-%s-%s\',\'%s\',%d)'%(type1,day[2],day[0],day[1],countryname,OrResult[type1][date][countryname]))
+                    cursor.execute('insert into Covid_%s(date,country_name,info,totalPerHundred,dailyPerMillion) values (\'20%s-%s-%s\',\'%s\',%d,%d,%d)'%(type1,day[2],day[0],day[1],countryname,OrResult[type1][date][countryname],totalPerHundred[type1][date][countryname],dailyPerMillion[type1][date][countryname]))
                     conn.commit()
                 except:
                     print('插入错误',type1,countryname,date)      
@@ -113,7 +133,7 @@ def Action(inc):
         for countryname in AtLastCountryList:
             print(date,countryname)
             try:
-                cursor.execute('insert into Covid_vaccine(date,country_name,info) values (\'%s\',\'%s\',%d)'%(date,countryname,0))
+                cursor.execute('insert into Covid_vaccine(date,country_name,info,totalPerHundred,dailyPerMillion) values (\'%s\',\'%s\',%d,%d,%d)'%(date,countryname,0,0,0))
                 conn.commit()
             except:
                 print('插入错误',"vaccine0",countryname,date)                
