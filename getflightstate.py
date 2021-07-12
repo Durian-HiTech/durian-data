@@ -30,7 +30,7 @@ def get_flight_info_by_code(code, date=datetime.now().strftime('%Y-%m-%d')):
         if fail_num > 50:
             return '暂无'
         res = requests.get(url)
-        soup = 
+        soup =
         state = soup.find(attrs={'class': 'state'})
         if state is not None:
             # city_num = len(state.find_all('div'))
