@@ -13,7 +13,7 @@ class MyPipeline(object):
     #该方法用于处理数据
     def process_item(self, item, spider):
         self.cursor.execute(
-            """update  train_info set pass_city=%s where train_num =%s and pass_city =''
+            """update  train_info2 set pass_city=%s where train_num =%s and pass_city =''
             """,  # 纯属python操作mysql知识，不熟悉请恶补
             (item['train_pass'],
             item['train_num'],

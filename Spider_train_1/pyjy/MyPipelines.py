@@ -13,7 +13,7 @@ class MyPipeline(object):
     #该方法用于处理数据
     def process_item(self, item, spider):
         self.cursor.execute(
-            """insert into train_info(train_num,train_id, departure_city,arrival_city ,departure_station,arrival_station,train_start_date,departure_time,arrival_time,duration_time,pass_city)
+            """insert into train_info2(train_num,train_id, departure_city,arrival_city ,departure_station,arrival_station,train_start_date,departure_time,arrival_time,duration_time,pass_city)
             value (%s, %s,%s, %s,%s,%s,%s,%s,%s,%s,%s)""",  # 纯属python操作mysql知识，不熟悉请恶补
             (item['train_num'],
             item['train_id'],

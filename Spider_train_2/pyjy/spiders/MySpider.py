@@ -27,7 +27,7 @@ class MySpider(scrapy.Spider):
         start=[]
         end=[]
         train=[]
-        with open('train_info.json') as f:
+        with open('train_info2_left_left.json') as f:
             trainlist = json.load(f)
         for i in trainlist:
             train.append(i['train_num'])
@@ -53,8 +53,9 @@ class MySpider(scrapy.Spider):
         train_pass = []
         
         ff = json.loads(response.body.decode())
-        
-        train_id= ff['trainInfo']['id']
+        print(ff)
+        print("aaaaaaaaaa")
+        train_id= ff['stationList'][0]['trainId']
         #print(json.loads(response.body.decode()))
         # lo = json.loads(ff)
         
@@ -68,7 +69,8 @@ class MySpider(scrapy.Spider):
             #     " 出发时间:",i['departDepartTime'],
             #     " 到达时间:",i['destArriveTime'],
             #     " 用时:",i['durationStr'])
-            if len(i['cityName'] )!= 0:
+            print(i['cityName'])
+            if i['cityName'] != None:
                 train_pass.append(i['cityName'])
         print(train_id)
         print(train_pass)
