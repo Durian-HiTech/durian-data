@@ -1,0 +1,328 @@
+{
+  "data": [
+    {
+      "province": "北京",
+      "city": "北京"
+    },
+    {
+      "province": "天津",
+      "city": "天津"
+    },
+    {
+      "province": "辽宁",
+      "city": "沈阳"
+    },
+    {
+      "province": "吉林",
+      "city": "长春"
+    },
+    {
+      "province": "黑龙江",
+      "city": "哈尔滨"
+    },
+    {
+      "province": "上海",
+      "city": "上海"
+    },
+    {
+      "province": "江苏",
+      "city": "南京"
+    },
+    {
+      "province": "湖北",
+      "city": "武汉"
+    },
+    {
+      "province": "广东",
+      "city": "广州"
+    },
+    {
+      "province": "重庆",
+      "city": "重庆"
+    },
+    {
+      "province": "四川",
+      "city": "成都"
+    },
+    {
+      "province": "陕西",
+      "city": "西安"
+    },
+    {
+      "province": "河北",
+      "city": "石家庄"
+    },
+    {
+      "province": "河北",
+      "city": "唐山"
+    },
+    {
+      "province": "山西",
+      "city": "太原"
+    },
+    {
+      "province": "内蒙",
+      "city": "包头"
+    },
+    {
+      "province": "辽宁",
+      "city": "大连"
+    },
+    {
+      "province": "辽宁",
+      "city": "鞍山"
+    },
+    {
+      "province": "辽宁",
+      "city": "抚顺"
+    },
+    {
+      "province": "吉林",
+      "city": "吉林"
+    },
+    {
+      "province": "黑龙江",
+      "city": "齐齐哈尔"
+    },
+    {
+      "province": "江苏",
+      "city": "徐州"
+    },
+    {
+      "province": "浙江",
+      "city": "杭州"
+    },
+    {
+      "province": "福建",
+      "city": "福州"
+    },
+    {
+      "province": "江西",
+      "city": "南昌"
+    },
+    {
+      "province": "山东",
+      "city": "济南"
+    },
+    {
+      "province": "山东",
+      "city": "青岛"
+    },
+    {
+      "province": "山东",
+      "city": "淄博"
+    },
+    {
+      "province": "河南",
+      "city": "郑州"
+    },
+    {
+      "province": "湖南",
+      "city": "长沙"
+    },
+    {
+      "province": "贵州",
+      "city": "贵阳"
+    },
+    {
+      "province": "云南",
+      "city": "昆明"
+    },
+    {
+      "province": "甘肃",
+      "city": "兰州"
+    },
+    {
+      "province": "新疆",
+      "city": "乌鲁木齐"
+    },
+    {
+      "province": "河北",
+      "city": "邯郸"
+    },
+    {
+      "province": "河北",
+      "city": "保定"
+    },
+    {
+      "province": "河北",
+      "city": "张家口"
+    },
+    {
+      "province": "山西",
+      "city": "大同"
+    },
+    {
+      "province": "内蒙",
+      "city": "呼和浩特"
+    },
+    {
+      "province": "辽宁",
+      "city": "本溪"
+    },
+    {
+      "province": "辽宁",
+      "city": "丹东"
+    },
+    {
+      "province": "辽宁",
+      "city": "锦州"
+    },
+    {
+      "province": "辽宁",
+      "city": "阜新"
+    },
+    {
+      "province": "辽宁",
+      "city": "辽阳"
+    },
+    {
+      "province": "黑龙江",
+      "city": "鸡西"
+    },
+    {
+      "province": "黑龙江",
+      "city": "鹤岗"
+    },
+    {
+      "province": "黑龙江",
+      "city": "大庆"
+    },
+    {
+      "province": "黑龙江",
+      "city": "伊春"
+    },
+    {
+      "province": "黑龙江",
+      "city": "佳木斯"
+    },
+    {
+      "province": "黑龙江",
+      "city": "牡丹江"
+    },
+    {
+      "province": "江苏",
+      "city": "无锡"
+    },
+    {
+      "province": "江苏",
+      "city": "常州"
+    },
+    {
+      "province": "江苏",
+      "city": "苏州"
+    },
+    {
+      "province": "江苏",
+      "city": "宁波"
+    },
+    {
+      "province": "安徽",
+      "city": "合肥"
+    },
+    {
+      "province": "安徽",
+      "city": "淮南"
+    },
+    {
+      "province": "安徽",
+      "city": "淮北"
+    },
+    {
+      "province": "福建",
+      "city": "厦门"
+    },
+    {
+      "province": "山东",
+      "city": "枣庄"
+    },
+    {
+      "province": "山东",
+      "city": "烟台"
+    },
+    {
+      "province": "山东",
+      "city": "潍坊"
+    },
+    {
+      "province": "山东",
+      "city": "泰安"
+    },
+    {
+      "province": "山东",
+      "city": "临沂"
+    },
+    {
+      "province": "河南",
+      "city": "开封"
+    },
+    {
+      "province": "河南",
+      "city": "洛阳"
+    },
+    {
+      "province": "河南",
+      "city": "平顶山"
+    },
+    {
+      "province": "河南",
+      "city": "安阳"
+    },
+    {
+      "province": "河南",
+      "city": "新乡"
+    },
+    {
+      "province": "河南",
+      "city": "焦作"
+    },
+    {
+      "province": "湖北",
+      "city": "黄石"
+    },
+    {
+      "province": "湖北",
+      "city": "襄樊"
+    },
+    {
+      "province": "湖北",
+      "city": "荆州"
+    },
+    {
+      "province": "湖南",
+      "city": "株洲"
+    },
+    {
+      "province": "湖南",
+      "city": "湘潭"
+    },
+    {
+      "province": "湖南",
+      "city": "衡阳"
+    },
+    {
+      "province": "广东",
+      "city": "深圳"
+    },
+    {
+      "province": "广东",
+      "city": "汕头"
+    },
+    {
+      "province": "广东",
+      "city": "湛江"
+    },
+    {
+      "province": "广西",
+      "city": "南宁"
+    },
+    {
+      "province": "广西",
+      "city": "柳州"
+    },
+    {
+      "province": "青海",
+      "city": "西宁"
+    }
+  ]
+}
